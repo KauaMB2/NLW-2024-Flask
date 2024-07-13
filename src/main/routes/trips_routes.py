@@ -7,6 +7,7 @@ from src.controllers.trip_creator import TripCreator
 from src.controllers.trip_finder import TripFinder
 from src.controllers.trip_confirmer import TripConfirm
 from src.controllers.link_creator import LinkCreator 
+from src.controllers.link_finder import LinkFinder 
 
 # Import repositories
 from src.models.repositories.trips_repository import TripsRepository 
@@ -41,10 +42,18 @@ def confirm_trip(tripId):
     response=controller.confirm(tripId)
     return jsonify(response["body"]), response["status_code"]#Return a JSON and the requestion status as being 200(SUCESSFULL)
 
-@trips_routes_bp.route("/trips/<tripId>/confirm", methods=["POST"])#Create a new route and define its methods
+@trips_routes_bp.route("/trips/<tripId>/links", methods=["POST"])#Create a new route and define its methods
 def create_trip_link(tripId):
     conn=db_connection_handler.get_connection()
     link_repository=LinksRepository(conn)
     controller=LinkCreator(link_repository)
     response=controller.create(request.json, tripId)
+    return jsonify(response["body"]), response["status_code"]#Return a JSON and the requestion status as being 200(SUCESSFULL)
+
+@trips_routes_bp.route("/trips/<tripId>/links", methods=["GET"])#Create a new route and define its methods
+def find_trip_link(tripId):
+    conn=db_connection_handler.get_connection()
+    link_repository=LinksRepository(conn)
+    controller=LinkFinder(link_repository)
+    response=controller.find(tripId)
     return jsonify(response["body"]), response["status_code"]#Return a JSON and the requestion status as being 200(SUCESSFULL)
