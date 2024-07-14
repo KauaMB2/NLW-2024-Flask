@@ -89,7 +89,6 @@ def get_trip_participants(tripId):
     participants_repository=ParticipantsRepository(conn)
     controller=ParticipantFinder(participants_repository)
     response=controller.find_participant_from_trip(tripId)
-    print(response["body"])
     return jsonify(response["body"]), response["status_code"]#Return a JSON and the requestion status as being 200(SUCESSFULL)
 
 @trips_routes_bp.route("/trips/<tripId>/activities", methods=["GET"])#Create a new route and define its methods
