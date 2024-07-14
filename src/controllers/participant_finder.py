@@ -14,10 +14,10 @@ class ParticipantFinder:
                     "is_confirmed": participant[2],
                     "email": participant[3]
                 })
-                return {
-                    "body": {"participant_id": participants_infos},
-                    "status_code": 201
-                }
+            return {
+                "body": {"participant_id": participants_infos},
+                "status_code": 201
+            }
         except Exception as exception:
                 return {
                     "body": {"error": "Bad Request","message":str(exception)},

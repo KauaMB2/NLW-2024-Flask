@@ -1,20 +1,31 @@
 from typing import Dict
+from collections import defaultdict
+from datetime import datetime
 
 class ActivityFinder:
     def __init__(self, activities_repository) -> None:
         self.__activities_repository=activities_repository
     def find_from_trip(self, trip_id) -> Dict:
         try:
-            activities=self.__activities_repository.find_activities_from_trip(trip_id)
-            formatted_activities=[]
+            activities = self.__activities_repository.find_activities_from_trip(trip_id)
+            grouped_activities = defaultdict(list)
             for activity in activities:
+                # Convert the string to a datetime object
+                occurs_at = datetime.fromisoformat(activity[3]) if isinstance(activity[3], str) else activity[3]
+                activity_date = occurs_at.date()
+                grouped_activities[activity_date].append({
+                    "id": activity[0],
+                    "title": activity[2],
+                    "occurs_at": occurs_at.isoformat()
+                })
+            formatted_activities = []
+            for date, activities in grouped_activities.items():
                 formatted_activities.append({
-                   "id": activity[0],
-                   "litle": activity[2],
-                   "occurs_at": activity[3],
+                    "date": date.isoformat(),
+                    "activities": activities
                 })
             return {
-                "body": {"activities": formatted_activities},
+                "body": formatted_activities,
                 "status_code": 200
             }
         except Exception as exception:
